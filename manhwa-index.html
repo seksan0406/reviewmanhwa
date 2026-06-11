@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ManhwaHub TH — รวมมังฮวาที่ดีที่สุด</title>
+  <meta name="description" content="รวมมังฮวาเกาหลีที่ดีที่สุด พร้อมรีวิว คะแนน และลิงก์อ่านถูกลิขสิทธิ์ ครบทุกแนว พระเอกเทพ ระบบ ฮันเตอร์"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0c0c0f;
+      --surface: #16161c;
+      --card: #1e1e27;
+      --border: #2a2a38;
+      --hover: #252532;
+      --accent: #7c6af7;
+      --accent2: #f7926a;
+      --accent3: #4fd1c5;
+      --text: #eeeef5;
+      --muted: #7a7a9a;
+      --faint: #3a3a52;
+      --rank-gold: #f6c90e;
+      --rank-silver: #adb5bd;
+      --rank-bronze: #cd7f32;
+      --r: 10px;
+      --max: 1100px;
+      --font: 'Sarabun', sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.6;min-height:100vh;}
+    a{color:inherit;text-decoration:none;}
+    button{cursor:pointer;font-family:var(--font);}
+    img{max-width:100%;display:block;}
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar{width:6px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:3px;}
+
+    /* ─── NAV ─── */
+    nav{
+      position:sticky;top:0;z-index:200;
+      background:rgba(12,12,15,0.92);backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      padding:0 24px;height:58px;
+      display:flex;align-items:center;gap:16px;
+    }
+    .logo{font-size:1.25rem;font-weight:800;letter-spacing:-1px;white-space:nowrap;}
+    .logo .m{color:var(--accent);}
+    .logo .h{color:var(--accent2);}
+    .nav-links{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:none;}
+    .nav-links::-webkit-scrollbar{display:none;}
+    .nav-btn{
+      flex-shrink:0;padding:6px 14px;border-radius:999px;
+      border:none;background:none;color:var(--muted);font-size:0.88rem;
+      transition:all 0.15s;white-space:nowrap;
+    }
+    .nav-btn:hover{color:var(--text);background:var(--hover);}
+    .nav-btn.active{background:var(--accent);color:#fff;}
+    .nav-search{
+      display:flex;align-items:center;gap:8px;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r);padding:7px 14px;min-width:180px;
+    }
+    .nav-search input{background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:0.88rem;width:100%;}
+    .nav-search input::placeholder{color:var(--muted);}
+
+    /* ─── PAGE SYSTEM ─── */
+    .page{display:none;max-width:var(--max);margin:0 auto;padding:32px 24px 80px;}
+    .page.active{display:block;}
+
+    /* ─── HOME HERO ─── */
+    .hero{
+      background:linear-gradient(135deg,#1a1030 0%,#0c1a2e 50%,#0c0c0f 100%);
+      border:1px solid var(--border);border-radius:16px;
+      padding:48px 40px;margin-bottom:48px;
+      display:flex;align-items:center;gap:40px;
+      position:relative;overflow:hidden;
+    }
+    .hero::before{
+      content:'';position:absolute;top:-60px;right:-60px;
+      width:300px;height:300px;
+      background:radial-gradient(circle,rgba(124,106,247,0.15) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .hero-text{flex:1;position:relative;}
+    .hero-eyebrow{font-size:0.75rem;color:var(--accent);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;}
+    .hero-text h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.15;margin-bottom:16px;}
+    .hero-text h1 span{color:var(--accent);}
+    .hero-text p{color:var(--muted);font-size:1rem;line-height:1.7;max-width:460px;}
+    .hero-stats{display:flex;gap:32px;margin-top:28px;}
+    .stat-item .num{font-size:1.8rem;font-weight:800;color:var(--accent2);}
+    .stat-item .lbl{font-size:0.78rem;color:var(--muted);margin-top:2px;}
+    .hero-visual{font-size:7rem;opacity:0.15;flex-shrink:0;user-select:none;}
+
+    /* ─── SECTION HEADER ─── */
+    .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+    .sec-title{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:10px;}
+    .sec-title::before{content:'';width:4px;height:20px;background:var(--accent);border-radius:2px;display:block;}
+    .see-all{font-size:0.82rem;color:var(--accent);border:1px solid var(--faint);padding:4px 12px;border-radius:999px;transition:all 0.15s;}
+    .see-all:hover{border-color:var(--accent);}
+
+    /* ─── MANHWA CARDS ─── */
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:16px;margin-bottom:40px;}
+    .m-card{
+      background:var(--card);border-radius:var(--r);overflow:hidden;
+      cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;
+      border:1px solid transparent;
+    }
+    .m-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,0.5);border-color:var(--faint);}
+    .m-cover{
+      width:100%;aspect-ratio:2/3;background:var(--surface);
+      display:flex;align-items:center;justify-content:center;
+      font-size:3.5rem;position:relative;overflow:hidden;
+    }
+    .m-cover-img{width:100%;height:100%;object-fit:cover;}
+    .m-badge{
+      position:absolute;top:8px;left:8px;
+      font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:4px;
+    }
+    .badge-hot{background:#ff4444;color:#fff;}
+    .badge-new{background:var(--accent3);color:#000;}
+    .badge-done{background:#22c55e;color:#fff;}
+    .m-info{padding:10px 12px;}
+    .m-title{font-size:0.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+    .m-sub{font-size:0.75rem;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px;}
+    .m-score{color:var(--rank-gold);font-weight:700;}
+
+    /* ─── TAGS ─── */
+    .tag{display:inline-block;font-size:0.72rem;padding:3px 10px;border-radius:999px;font-weight:600;}
+    .tag-action{background:#2a1a1a;color:#ff8080;}
+    .tag-fantasy{background:#1a1a2a;color:#8080ff;}
+    .tag-hunter{background:#1a2a1a;color:#80c080;}
+    .tag-system{background:#2a2a1a;color:#c0c080;}
+    .tag-revenge{background:#2a1a2a;color:#c080c0;}
+    .tag-isekai{background:#1a2a2a;color:#80c0c0;}
+    .tag-reborn{background:#2a1f1a;color:#d4a574;}
+    .tag-op{background:#1a1f2a;color:#74a8d4;}
+
+    /* ─── UPDATE LIST ─── */
+    .update-list{display:flex;flex-direction:column;gap:8px;margin-bottom:40px;}
+    .update-item{
+      display:flex;align-items:center;gap:14px;
+      background:var(--card);border-radius:var(--r);padding:12px 16px;
+      cursor:pointer;transition:background 0.15s;border:1px solid transparent;
+    }
+    .update-item:hover{background:var(--hover);border-color:var(--faint);}
+    .update-thumb{width:44px;height:60px;border-radius:6px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+    .update-info{flex:1;}
+    .update-title{font-size:0.9rem;font-weight:700;}
+    .update-meta{font-size:0.78rem;color:var(--muted);margin-top:3px;}
+    .update-new{font-size:0.7rem;background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-weight:700;flex-shrink:0;}
+
+    /* ─── CATEGORY GRID ─── */
+    .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:40px;}
+    .cat-card{
+      background:var(--card);border-radius:var(--r);padding:20px 16px;
+      cursor:pointer;transition:all 0.15s;border:1px solid var(--border);
+      display:flex;flex-direction:column;gap:6px;
+    }
+    .cat-card:hover{border-color:var(--accent);background:var(--hover);}
+    .cat-icon{font-size:1.8rem;}
+    .cat-name{font-size:0.95rem;font-weight:700;}
+    .cat-count{font-size:0.78rem;color:var(--muted);}
+
+    /* ─── MANGA DETAIL PAGE ─── */
+    .detail-hero{
+      display:grid;grid-template-columns:220px 1fr;gap:32px;
+      background:var(--surface);border-radius:16px;padding:32px;
+      margin-bottom:32px;border:1px solid var(--border);
+    }
+    .detail-cover{
+      width:220px;aspect-ratio:2/3;border-radius:var(--r);
+      background:var(--card);display:flex;align-items:center;justify-content:center;
+      font-size:5rem;border:1px solid var(--border);overflow:hidden;
+    }
+    .detail-cover img{width:100%;height:100%;object-fit:cover;}
+    .detail-meta h1{font-size:1.6rem;font-weight:800;line-height:1.2;margin-bottom:4px;}
+    .detail-en{font-size:0.9rem;color:var(--muted);margin-bottom:16px;}
+    .detail-score-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+    .big-score{font-size:2.2rem;font-weight:800;color:var(--rank-gold);}
+    .score-label{font-size:0.78rem;color:var(--muted);}
+    .detail-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+    .detail-stats{display:flex;gap:20px;margin-bottom:20px;}
+    .dstat{text-align:center;background:var(--card);padding:10px 16px;border-radius:8px;}
+    .dstat-num{font-size:1.1rem;font-weight:800;color:var(--accent2);}
+    .dstat-lbl{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+    .status-badge{display:inline-block;font-size:0.78rem;padding:4px 12px;border-radius:999px;font-weight:700;}
+    .status-ongoing{background:#1a2a1a;color:#4ade80;}
+    .status-done{background:#1a2a1a;color:#22c55e;}
+    .read-btn{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--accent);color:#fff;border:none;
+      padding:12px 28px;border-radius:var(--r);font-size:1rem;font-weight:700;
+      transition:background 0.15s;margin-top:8px;
+    }
+    .read-btn:hover{background:#6355d4;}
+
+    .detail-section{background:var(--surface);border-radius:var(--r);padding:24px;margin-bottom:20px;border:1px solid var(--border);}
+    .detail-section h2{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .detail-section p{color:var(--muted);line-height:1.8;font-size:0.93rem;}
+    .read-links{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+    .read-link{
+      display:flex;align-items:center;justify-content:space-between;
+      background:var(--card);border:1px solid var(--border);border-radius:8px;
+      padding:12px 16px;transition:border-color 0.15s;
+    }
+    .read-link:hover{border-color:var(--accent3);}
+    .read-link-name{font-size:0.9rem;font-weight:600;}
+    .read-link-note{font-size:0.75rem;color:var(--accent3);}
+    .arrow{color:var(--muted);}
+
+    /* ─── RANKING PAGE ─── */
+    .rank-list{display:flex;flex-direction:column;gap:10px;margin-bottom:40px;}
+    .rank-item{
+      display:flex;align-items:center;gap:16px;
+      background:var(--card);border-radius:var(--r);padding:14px 18px;
+      cursor:pointer;transition:background 0.15s;border:1px solid transparent;
+    }
+    .rank-item:hover{background:var(--hover);border-color:var(--faint);}
+    .rank-num{
+      font-size:1.2rem;font-weight:800;width:36px;text-align:center;flex-shrink:0;
+    }
+    .rank-1{color:var(--rank-gold);}
+    .rank-2{color:var(--rank-silver);}
+    .rank-3{color:var(--rank-bronze);}
+    .rank-n{color:var(--muted);}
+    .rank-thumb{width:48px;height:64px;border-radius:6px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+    .rank-info{flex:1;}
+    .rank-title{font-size:0.95rem;font-weight:700;}
+    .rank-tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}
+    .rank-score{font-size:1.2rem;font-weight:800;color:var(--rank-gold);flex-shrink:0;}
+
+    /* ─── SEARCH PAGE ─── */
+    .search-box{
+      display:flex;gap:12px;margin-bottom:24px;
+    }
+    .search-input{
+      flex:1;background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r);padding:12px 18px;color:var(--text);
+      font-family:var(--font);font-size:1rem;outline:none;transition:border-color 0.15s;
+    }
+    .search-input:focus{border-color:var(--accent);}
+    .search-input::placeholder{color:var(--muted);}
+    .search-btn{
+      background:var(--accent);border:none;color:#fff;
+      padding:12px 24px;border-radius:var(--r);font-size:0.95rem;font-weight:700;
+      transition:background 0.15s;
+    }
+    .search-btn:hover{background:#6355d4;}
+    .search-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+    .filter-btn{
+      padding:6px 14px;border-radius:999px;border:1px solid var(--border);
+      background:none;color:var(--muted);font-size:0.82rem;transition:all 0.15s;
+    }
+    .filter-btn:hover,.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .search-results{margin-top:8px;}
+    .no-result{text-align:center;padding:60px 20px;color:var(--muted);}
+    .no-result .icon{font-size:3rem;margin-bottom:12px;}
+
+    /* ─── CATEGORY PAGE ─── */
+    .cat-page-header{
+      background:var(--surface);border-radius:var(--r);padding:24px 28px;
+      margin-bottom:28px;border:1px solid var(--border);
+      display:flex;align-items:center;gap:16px;
+    }
+    .cat-page-icon{font-size:2.5rem;}
+    .cat-page-title{font-size:1.4rem;font-weight:800;}
+    .cat-page-count{font-size:0.85rem;color:var(--muted);margin-top:4px;}
+
+    /* ─── ABOUT PAGE ─── */
+    .about-card{background:var(--surface);border-radius:16px;padding:40px;border:1px solid var(--border);max-width:700px;}
+    .about-card h1{font-size:1.8rem;font-weight:800;margin-bottom:8px;}
+    .about-card .sub{color:var(--muted);margin-bottom:28px;}
+    .about-section{margin-bottom:28px;}
+    .about-section h2{font-size:1rem;font-weight:700;margin-bottom:10px;color:var(--accent2);}
+    .about-section p,.about-section li{color:var(--muted);line-height:1.8;font-size:0.93rem;}
+    .about-section ul{padding-left:20px;}
+    .about-section li{margin-bottom:4px;}
+    .about-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+    .ab{background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:8px;font-size:0.82rem;color:var(--text);}
+
+    /* ─── FOOTER ─── */
+    footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;}
+    footer p{font-size:0.8rem;color:var(--muted);}
+
+    /* ─── MODAL OVERLAY ─── */
+    #detailPage{display:none;}
+    #detailPage.active{display:block;}
+
+    /* ─── BREADCRUMB ─── */
+    .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:24px;font-size:0.82rem;color:var(--muted);}
+    .breadcrumb span{cursor:pointer;transition:color 0.15s;}
+    .breadcrumb span:hover{color:var(--text);}
+    .breadcrumb .sep{opacity:0.4;}
+    .breadcrumb .current{color:var(--text);}
+
+    @media(max-width:640px){
+      .hero{flex-direction:column;padding:28px 20px;gap:20px;}
+      .hero-visual{display:none;}
+      .detail-hero{grid-template-columns:1fr;text-align:center;}
+      .detail-cover{width:160px;margin:0 auto;}
+      .detail-score-row{justify-content:center;}
+      .detail-tags{justify-content:center;}
+      .detail-stats{justify-content:center;}
+      .card-grid{grid-template-columns:repeat(3,1fr);}
+      nav .nav-search{display:none;}
+      .page{padding:20px 16px 60px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><span class="m">Manhwa</span><span class="h">Hub</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home',this)">🏠 หน้าแรก</button>
+    <button class="nav-btn" onclick="showPage('ranking',this)">🏆 อันดับ</button>
+    <button class="nav-btn" onclick="showPage('category',this)">📚 หมวดหมู่</button>
+    <button class="nav-btn" onclick="showPage('search',this)">🔍 ค้นหา</button>
+    <button class="nav-btn" onclick="showPage('about',this)">ℹ️ เกี่ยวกับ</button>
+  </div>
+  <div class="nav-search">
+    <svg width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="ค้นหามังฮวา..." oninput="quickSearch(this.value)"/>
+  </div>
+</nav>
+
+<!-- ═══════════════ HOME PAGE ═══════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">✦ แหล่งรวมมังฮวาเกาหลีที่ดีที่สุด</div>
+      <h1>อ่านมังฮวา<br/><span>คุณภาพสูง</span><br/>ฟรี ครบ จบในที่เดียว</h1>
+      <p>รวมมังฮวาเกาหลีที่คัดสรรแล้ว พร้อมรีวิว คะแนน และลิงก์อ่านถูกลิขสิทธิ์ทุกเรื่อง</p>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="num">200+</div><div class="lbl">มังฮวาในระบบ</div></div>
+        <div class="stat-item"><div class="num">8</div><div class="lbl">หมวดหมู่</div></div>
+        <div class="stat-item"><div class="num">ฟรี</div><div class="lbl">100%</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">⚡</div>
+  </div>
+
+  <!-- ยอดนิยม -->
+  <div class="sec-header">
+    <div class="sec-title">🔥 มังฮวายอดนิยม</div>
+    <span class="see-all" onclick="showPage('ranking',document.querySelectorAll('.nav-btn')[1])">ดูทั้งหมด →</span>
+  </div>
+  <div class="card-grid" id="popular-grid"></div>
+
+  <!-- อัปเดตล่าสุด -->
+  <div class="sec-header">
+    <div class="sec-title">🆕 เพิ่มเข้าเว็บล่าสุด</div>
+  </div>
+  <div class="update-list" id="update-list"></div>
+
+  <!-- หมวดหมู่ -->
+  <div class="sec-header">
+    <div class="sec-title">📚 หมวดหมู่</div>
+    <span class="see-all" onclick="showPage('category',document.querySelectorAll('.nav-btn')[2])">ดูทั้งหมด →</span>
+  </div>
+  <div class="cat-grid" id="home-cat-grid"></div>
+</div>
+
+<!-- ═══════════════ RANKING PAGE ═══════════════ -->
+<div class="page" id="page-ranking">
+  <div style="margin-bottom:28px">
+    <div class="sec-title" style="font-size:1.3rem;margin-bottom:8px">🏆 Top 100 มังฮวาที่ดีที่สุด</div>
+    <p style="color:var(--muted);font-size:0.9rem">จัดอันดับตามคะแนนรีวิวและความนิยมจากผู้อ่านทั่วโลก</p>
+  </div>
+  <div class="rank-list" id="rank-list"></div>
+</div>
+
+<!-- ═══════════════ CATEGORY PAGE ═══════════════ -->
+<div class="page" id="page-category">
+  <div style="margin-bottom:28px">
+    <div class="sec-title" style="font-size:1.3rem;margin-bottom:8px">📚 หมวดหมู่ทั้งหมด</div>
+    <p style="color:var(--muted);font-size:0.9rem">เลือกแนวที่ชอบแล้วดูมังฮวาในหมวดนั้นได้เลย</p>
+  </div>
+  <div class="cat-grid" id="full-cat-grid"></div>
+  <!-- Category detail -->
+  <div id="cat-detail" style="display:none;margin-top:32px">
+    <div class="cat-page-header" id="cat-detail-header"></div>
+    <div class="card-grid" id="cat-detail-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEARCH PAGE ═══════════════ -->
+<div class="page" id="page-search">
+  <div style="margin-bottom:20px">
+    <div class="sec-title" style="font-size:1.3rem;margin-bottom:8px">🔍 ค้นหามังฮวา</div>
+  </div>
+  <div class="search-box">
+    <input class="search-input" id="main-search" type="text" placeholder="พิมพ์ชื่อมังฮวา เช่น Solo Leveling, Omniscient Reader..." oninput="doSearch()"/>
+    <button class="search-btn" onclick="doSearch()">ค้นหา</button>
+  </div>
+  <div class="search-filters">
+    <button class="filter-btn active" onclick="setFilter('all',this)">ทั้งหมด</button>
+    <button class="filter-btn" onclick="setFilter('พระเอกเทพ',this)">พระเอกเทพ</button>
+    <button class="filter-btn" onclick="setFilter('ระบบ',this)">ระบบ</button>
+    <button class="filter-btn" onclick="setFilter('ฮันเตอร์',this)">ฮันเตอร์</button>
+    <button class="filter-btn" onclick="setFilter('ล้างแค้น',this)">ล้างแค้น</button>
+    <button class="filter-btn" onclick="setFilter('เกิดใหม่',this)">เกิดใหม่</button>
+    <button class="filter-btn" onclick="setFilter('ต่างโลก',this)">ต่างโลก</button>
+  </div>
+  <div class="search-results card-grid" id="search-results"></div>
+</div>
+
+<!-- ═══════════════ ABOUT PAGE ═══════════════ -->
+<div class="page" id="page-about">
+  <div class="about-card">
+    <h1>เกี่ยวกับ ManhwaHub TH</h1>
+    <p class="sub">แหล่งรวมข้อมูลมังฮวาเกาหลีภาษาไทย ครบที่สุดในไทย</p>
+    <div class="about-section">
+      <h2>🎯 เว็บนี้คืออะไร?</h2>
+      <p>ManhwaHub TH คือเว็บไซต์รวมข้อมูลและรีวิวมังฮวา (การ์ตูนเกาหลี) ภาษาไทย ที่รวบรวมมังฮวาคุณภาพสูง พร้อมรีวิว คะแนน และลิงก์อ่านถูกลิขสิทธิ์ เพื่อให้แฟนมังฮวาชาวไทยหาเรื่องดีๆ อ่านได้ง่ายขึ้น</p>
+    </div>
+    <div class="about-section">
+      <h2>📖 มีอะไรในเว็บบ้าง?</h2>
+      <ul>
+        <li>รวมมังฮวากว่า 200+ เรื่อง พร้อมรีวิวและคะแนน</li>
+        <li>จัดหมวดหมู่ตามแนว เช่น พระเอกเทพ ระบบ ฮันเตอร์ ล้างแค้น</li>
+        <li>จัดอันดับ Top 100 มังฮวาที่ดีที่สุด</li>
+        <li>ลิงก์อ่านถูกลิขสิทธิ์บนแพลตฟอร์มที่น่าเชื่อถือ</li>
+        <li>ค้นหาได้ตามชื่อเรื่องและแนว</li>
+      </ul>
+    </div>
+    <div class="about-section">
+      <h2>⚖️ ลิขสิทธิ์</h2>
+      <p>เราไม่ได้โฮสต์ไฟล์มังฮวาโดยตรง แต่เชื่อมโยงไปยังแพลตฟอร์มที่มีลิขสิทธิ์อย่างถูกต้อง เช่น LINE WEBTOON, Kakao Webtoon, Naver Webtoon เพื่อสนับสนุนผู้สร้างสรรค์ผลงาน</p>
+    </div>
+    <div class="about-section">
+      <h2>🛠️ เทคโนโลยี</h2>
+      <div class="about-badges">
+        <span class="ab">HTML5</span>
+        <span class="ab">CSS3</span>
+        <span class="ab">Vanilla JS</span>
+        <span class="ab">GitHub Pages</span>
+        <span class="ab">No Framework</span>
+        <span class="ab">Free Hosting</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DETAIL PAGE ═══════════════ -->
+<div class="page" id="page-detail">
+  <div class="breadcrumb" id="detail-breadcrumb"></div>
+  <div class="detail-hero" id="detail-hero"></div>
+  <div id="detail-body"></div>
+</div>
+
+<footer>
+  <p>© 2025 ManhwaHub TH · ข้อมูลมังฮวาเกาหลีภาษาไทย · ไม่มีโฆษณาป๊อปอัพ</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// DATABASE
+// ═══════════════════════════════════════════
+const DB = [
+  {
+    id: 1,
+    titleTH: "โซโล เลเวลลิ่ง",
+    titleEN: "Solo Leveling",
+    emoji: "⚔️",
+    coverBg: "#1a0a2e",
+    genres: ["พระเอกเทพ","ฮันเตอร์","แอคชั่น","แฟนตาซี"],
+    genreTags: ["tag-op","tag-hunter","tag-action","tag-fantasy"],
+    score: 9.5,
+    views: "45M",
+    chapters: 179,
+    status: "done",
+    badge: "hot",
+    addedDate: "1 มิ.ย. 2568",
+    synopsis: "ในโลกที่มีประตูมิติเปิดขึ้นทุกที่ นักล่าอย่าง ซอง จินอู คือนักล่าระดับ E ที่อ่อนแอที่สุด แต่หลังจากเกือบตายในดันเจี้ยน เขาได้รับพลังพิเศษ \"ระบบ\" ที่ทำให้เขาเลเวลอัพได้ไม่มีขีดจำกัด จากอ่อนแอที่สุดสู่นักล่าที่ทรงพลังที่สุดในโลก",
+    review: "Solo Leveling คือมังฮวาที่ทำให้แนวพระเอกเทพกลายเป็น mainstream ระดับโลก งานวาดของ Dubu สวยงามมากในระดับภาพยนตร์ ทุกฉากแอคชันดูตื่นตาตื่นใจ เส้นเรื่องดำเนินไปอย่างรวดเร็วไม่น่าเบื่อ เหมาะมากสำหรับคนที่ชอบดูตัวเอกเติบโตอย่างมีพลัง ข้อเสียเล็กน้อยคือตัวละครรองค่อนข้างแบน แต่โดยรวมถือว่าเป็น must-read",
+    suitable: "คนที่ชอบมังฮวาแนวพระเอกเก่งฝ่าเดียว ชอบระบบ RPG อยากเห็นตัวเอกที่เจ๋งและเท่ ไม่อยากอ่านเรื่องที่ยืดยาวเกินไป",
+    readLinks: [
+      { name: "Kakao Webtoon", note: "ถูกลิขสิทธิ์ มีภาษาไทย", url: "https://webtoon.kakao.com" },
+      { name: "LINE WEBTOON", note: "ฟรีบางตอน", url: "https://www.webtoons.com" }
+    ],
+    similar: [2, 3],
+    popular: true,
+    new: false
+  },
+  {
+    id: 2,
+    titleTH: "ผู้อ่านรอบรู้",
+    titleEN: "Omniscient Reader's Viewpoint",
+    emoji: "📖",
+    coverBg: "#0a1a2e",
+    genres: ["พระเอกเทพ","แฟนตาซี","ระบบ","แอคชั่น"],
+    genreTags: ["tag-op","tag-fantasy","tag-system","tag-action"],
+    score: 9.4,
+    views: "38M",
+    chapters: 551,
+    status: "done",
+    badge: "hot",
+    addedDate: "3 มิ.ย. 2568",
+    synopsis: "คิม ด็อกจา เป็นคนเดียวในโลกที่อ่านนิยายออนไลน์เรื่อง 'Ways of Survival' จนจบ และวันหนึ่งโลกก็กลายเป็นเหมือนนิยายเรื่องนั้น เขาจึงเป็นคนเดียวที่รู้อนาคตของทุกสิ่ง และต้องใช้ความรู้นั้นช่วยให้ตัวเองและคนที่รักรอดชีวิต",
+    review: "ORV คือหนึ่งในมังฮวาที่มีการเขียนเรื่องดีที่สุดเท่าที่เคยอ่านมา โครงเรื่องซับซ้อนแต่ไม่ยุ่งเหยิง ตัวละครมีความลึก พัฒนาการของตัวเอกน่าติดตามมาก มีฉากอิโมชั่นที่กินใจมากหลายฉาก ข้อเสียคือจำนวนตอนที่เยอะมากอาจทำให้บางคนกลัวไม่กล้าเริ่ม แต่ถ้าเริ่มแล้วจะหยุดไม่ได้",
+    suitable: "คนที่ชอบเรื่องราวที่มีความลึกและซับซ้อน ชอบดูตัวเอกใช้ปัญญา ไม่กลัวจำนวนตอนเยอะ ชอบแนว meta-fiction",
+    readLinks: [
+      { name: "LINE WEBTOON", note: "ถูกลิขสิทธิ์ ฟรีบางตอน", url: "https://www.webtoons.com" }
+    ],
+    similar: [1, 3],
+    popular: true,
+    new: false
+  },
+  {
+    id: 3,
+    titleTH: "จุดเริ่มต้นหลังจบ",
+    titleEN: "The Beginning After the End",
+    emoji: "👑",
+    coverBg: "#1a2a0a",
+    genres: ["เกิดใหม่","แฟนตาซี","พระเอกเทพ","ต่างโลก"],
+    genreTags: ["tag-reborn","tag-fantasy","tag-op","tag-isekai"],
+    score: 9.2,
+    views: "30M",
+    chapters: 215,
+    status: "ongoing",
+    badge: "hot",
+    addedDate: "5 มิ.ย. 2568",
+    synopsis: "กษัตริย์ผู้ยิ่งใหญ่ที่สุดในประวัติศาสตร์สิ้นพระชนม์และเกิดใหม่ในโลกแฟนตาซีที่มีเวทมนตร์จริง ด้วยความทรงจำและประสบการณ์ของกษัตริย์ที่ยิ่งใหญ่ เขาจะสร้างชีวิตใหม่ที่ดีกว่าเดิม พร้อมค้นพบความลับของโลกใบใหม่",
+    review: "TBATE เป็นมังฮวาเกิดใหม่ที่ดีที่สุดเรื่องหนึ่ง ตัวเอกไม่ได้เก่งตั้งแต่ต้นแต่เติบโตแบบสมเหตุสมผล งานวาดพัฒนาขึ้นมากจากต้นเรื่องถึงปลายเรื่อง โครงเรื่องมีความยาวและลึกพอสมควร เส้นเรื่องหลังๆ ซับซ้อนขึ้นมากจนบางคนอาจรู้สึกสับสน",
+    suitable: "แฟนมังฮวาแนวเกิดใหม่ในต่างโลก ชอบดูตัวเอกเติบโตจากศูนย์ อยากอ่านเรื่องที่มีความยาวและโลกกว้างใหญ่",
+    readLinks: [
+      { name: "Tapas", note: "ต้นฉบับ ถูกลิขสิทธิ์", url: "https://tapas.io" },
+      { name: "LINE WEBTOON", note: "ฟรีบางตอน", url: "https://www.webtoons.com" }
+    ],
+    similar: [1, 4],
+    popular: true,
+    new: false
+  },
+  {
+    id: 4,
+    titleTH: "ฉันคือนักล่าผู้ยิ่งใหญ่",
+    titleEN: "The Max Level Hero Has Returned",
+    emoji: "🗡️",
+    coverBg: "#2a1a0a",
+    genres: ["พระเอกเทพ","แฟนตาซี","ล้างแค้น"],
+    genreTags: ["tag-op","tag-fantasy","tag-revenge"],
+    score: 8.8,
+    views: "18M",
+    chapters: 130,
+    status: "ongoing",
+    badge: "new",
+    addedDate: "8 มิ.ย. 2568",
+    synopsis: "เจ้าชายผู้อ่อนแอถูกทอดทิ้งในสนามรบ แต่จิตวิญญาณของเขาได้เดินทางไปยังดินแดนแห่งวีรบุรุษ ฝึกฝนเป็นพันปีและกลับมาในร่างเดิม พร้อมพลังที่ทรงพลังที่สุด เพื่อล้างแค้นทุกคนที่ทรยศเขา",
+    review: "มังฮวาแนวพระเอกกลับมาเอาคืนที่ทำได้ดีมาก บรรยากาศเข้มข้นสนุกตลอดเรื่อง ฉากล้างแค้นชวนกิเลสดีมาก งานวาดสวยสม่ำเสมอ",
+    suitable: "คนที่ชอบดูตัวเอกล้างแค้น เรื่องที่มีความดราม่าสูง ชอบเห็นคนเลวได้รับกรรม",
+    readLinks: [
+      { name: "LINE WEBTOON", note: "ฟรีบางตอน", url: "https://www.webtoons.com" }
+    ],
+    similar: [1, 5],
+    popular: false,
+    new: true
+  },
+  {
+    id: 5,
+    titleTH: "ราชาแห่งมิติ",
+    titleEN: "Dimensional Sovereign",
+    emoji: "🌀",
+    coverBg: "#0a1a2a",
+    genres: ["ระบบ","แฟนตาซี","พระเอกเทพ"],
+    genreTags: ["tag-system","tag-fantasy","tag-op"],
+    score: 8.6,
+    views: "12M",
+    chapters: 94,
+    status: "done",
+    badge: null,
+    addedDate: "10 มิ.ย. 2568",
+    synopsis: "หนุ่มธรรมดาได้รับ 'ระบบมิติ' ที่ให้เขาสร้างอาณาจักรในมิติส่วนตัว และใช้กองทัพจากมิตินั้นต่อสู้กับสัตว์ประหลาดที่รุกรานโลก",
+    review: "มังฮวาระบบที่มีมุมมองใหม่ ไอเดียการสร้างอาณาจักรในมิติน่าสนใจมาก เล่มต้นๆ สนุกมาก แต่ช่วงหลังเนื้อเรื่องเร่งเกินไปนิด",
+    suitable: "คนที่ชอบมังฮวาระบบ ชอบ base building และการสร้างกองทัพ",
+    readLinks: [
+      { name: "LINE WEBTOON", note: "ฟรีบางตอน", url: "https://www.webtoons.com" }
+    ],
+    similar: [1, 2],
+    popular: false,
+    new: true
+  },
+  {
+    id: 6,
+    titleTH: "ลอร์ดออฟมิสทิก",
+    titleEN: "Lord of the Mysteries",
+    emoji: "🔮",
+    coverBg: "#1a0a1a",
+    genres: ["แฟนตาซี","ระบบ","ล้างแค้น"],
+    genreTags: ["tag-fantasy","tag-system","tag-revenge"],
+    score: 9.1,
+    views: "22M",
+    chapters: 310,
+    status: "ongoing",
+    badge: null,
+    addedDate: "6 มิ.ย. 2568",
+    synopsis: "นักศึกษาชาวจีนตื่นขึ้นในโลกสไตล์วิคตอเรียนที่ผสมผสานเทคโนโลยีกับเวทมนตร์ เขาต้องดำรงชีวิตในฐานะ 'ซิมบาลิสต์' ขณะที่พยายามค้นหาความลับของตัวเองและโลกใบนี้",
+    review: "มังฮวาที่มีโลกกว้างและระบบเวทมนตร์ที่ลึกที่สุดเรื่องหนึ่ง บรรยากาศยุควิคตอเรียนผสมอ็อคคัลต์ทำได้ดีมาก เหมาะกับคนที่ชอบเรื่องซับซ้อนและไม่รีบ",
+    suitable: "คนที่ชอบโลกกว้างและซับซ้อน ไม่รีบร้อน ชอบเรื่องราวมีชั้นเชิง",
+    readLinks: [
+      { name: "Bilibili Comics", note: "ถูกลิขสิทธิ์", url: "https://www.bilibilicomics.com" }
+    ],
+    similar: [2, 5],
+    popular: false,
+    new: true
+  },
+  {
+    id: 7,
+    titleTH: "ฮันเตอร์ × ฮันเตอร์ เกาหลี",
+    titleEN: "A Returner's Magic Should Be Special",
+    emoji: "✨",
+    coverBg: "#0a2a1a",
+    genres: ["เกิดใหม่","แฟนตาซี","พระเอกเทพ","ระบบ"],
+    genreTags: ["tag-reborn","tag-fantasy","tag-op","tag-system"],
+    score: 8.9,
+    views: "20M",
+    chapters: 267,
+    status: "done",
+    badge: null,
+    addedDate: "7 มิ.ย. 2568",
+    synopsis: "นักล่าที่รอดชีวิตคนสุดท้ายจากดันเจี้ยนที่ยากที่สุดในโลก ย้อนเวลากลับไป 13 ปี เพื่อเตรียมพร้อมก่อนที่ดันเจี้ยนนั้นจะเปิดอีกครั้ง",
+    review: "มังฮวาย้อนเวลาที่ใช้มุมมอง 'รู้แล้วทำอะไรดี' ได้อย่างชาญฉลาด ตัวเอกไม่ได้แค่เอาชนะศัตรู แต่พยายามสร้างทีมที่แข็งแกร่งขึ้น",
+    suitable: "คนที่ชอบมังฮวาย้อนเวลา ชอบดูตัวเอกเตรียมแผนล่วงหน้า",
+    readLinks: [
+      { name: "LINE WEBTOON", note: "ฟรีบางตอน", url: "https://www.webtoons.com" }
+    ],
+    similar: [1, 3],
+    popular: true,
+    new: false
+  },
+  {
+    id: 8,
+    titleTH: "ราชาซอมบี้",
+    titleEN: "Zombie Apocalypse Hunter",
+    emoji: "🧟",
+    coverBg: "#2a0a0a",
+    genres: ["ล้างแค้น","แอคชั่น","ฮันเตอร์"],
+    genreTags: ["tag-revenge","tag-action","tag-hunter"],
+    score: 8.4,
+    views: "9M",
+    chapters: 88,
+    status: "ongoing",
+    badge: "new",
+    addedDate: "11 มิ.ย. 2568",
+    synopsis: "หลังโลกถูกซอมบี้บุกรุก นักล่าคนหนึ่งที่สูญเสียครอบครัวกลับมาพร้อมพลังพิเศษเพื่อแก้แค้นและปกป้องคนที่รักที่เหลืออยู่",
+    review: "มังฮวา post-apocalypse ที่สนุกและมีแอคชันจัดจ้าน บรรยากาศดาร์กดีมาก เหมาะสำหรับคนชอบแนว survival",
+    suitable: "คนที่ชอบ survival horror และแอคชันไม่หยุด",
+    readLinks: [
+      { name: "Naver Webtoon", note: "ต้นฉบับ", url: "https://comic.naver.com" }
+    ],
+    similar: [4, 1],
+    popular: false,
+    new: true
+  }
+];
+
+const CATEGORIES = [
+  { id: "พระเอกเทพ", icon: "⚡", name: "พระเอกเทพ", desc: "ตัวเอกที่ทรงพลังเหนือใคร", color: "#7c6af7" },
+  { id: "เกิดใหม่",  icon: "♻️", name: "เกิดใหม่",  desc: "ย้อนเวลา / เกิดใหม่",      color: "#f7926a" },
+  { id: "ระบบ",     icon: "🖥️", name: "ระบบ",     desc: "มีระบบ RPG ช่วย",          color: "#4fd1c5" },
+  { id: "ล้างแค้น", icon: "🗡️", name: "ล้างแค้น", desc: "กลับมาเอาคืน",             color: "#f87171" },
+  { id: "ฮันเตอร์", icon: "🏹", name: "ฮันเตอร์",  desc: "นักล่าอสูร / ดันเจี้ยน",  color: "#34d399" },
+  { id: "ต่างโลก",  icon: "🌍", name: "ต่างโลก",  desc: "ถูกดูดไปต่างโลก",          color: "#60a5fa" },
+  { id: "แฟนตาซี", icon: "🔮", name: "แฟนตาซี",  desc: "โลกเวทมนตร์และเวทย์มนตร์",  color: "#c084fc" },
+  { id: "แอคชั่น",  icon: "💥", name: "แอคชั่น",  desc: "ต่อสู้ระห่ำ ไม่หยุด",      color: "#fb923c" },
+];
+
+// ─── PAGE SYSTEM ───────────────────────────
+let currentPage = 'home';
+let searchFilter = 'all';
+let prevPage = 'home';
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  prevPage = currentPage;
+  currentPage = id;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (id === 'search') { doSearch(); }
+}
+
+// ─── RENDER HELPERS ───────────────────────
+function badgeHtml(badge) {
+  if (!badge) return '';
+  const map = { hot: ['badge-hot','🔥 Hot'], new: ['badge-new','✨ ใหม่'], done: ['badge-done','✅ จบ'] };
+  const [cls, label] = map[badge] || ['',''];
+  return `<div class="m-badge ${cls}">${label}</div>`;
+}
+
+function tagHtml(genres, genreTags) {
+  return genres.slice(0, 3).map((g, i) => `<span class="tag ${genreTags[i] || ''}">${g}</span>`).join('');
+}
+
+function cardHtml(m) {
+  return `
+    <div class="m-card" onclick="openDetail(${m.id})">
+      ${badgeHtml(m.badge)}
+      <div class="m-cover" style="background:${m.coverBg}">
+        <span style="font-size:3.5rem">${m.emoji}</span>
+      </div>
+      <div class="m-info">
+        <div class="m-title">${m.titleEN}</div>
+        <div class="m-sub">
+          <span class="m-score">⭐ ${m.score}</span>
+          <span>${m.chapters} ตอน</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ─── HOME ──────────────────────────────────
+function renderHome() {
+  // Popular
+  const pop = DB.filter(m => m.popular);
+  document.getElementById('popular-grid').innerHTML = pop.map(cardHtml).join('');
+
+  // Updates
+  const recent = [...DB].sort((a, b) => b.id - a.id).slice(0, 6);
+  document.getElementById('update-list').innerHTML = recent.map(m => `
+    <div class="update-item" onclick="openDetail(${m.id})">
+      <div class="update-thumb" style="background:${m.coverBg}">${m.emoji}</div>
+      <div class="update-info">
+        <div class="update-title">${m.titleEN}</div>
+        <div class="update-meta">${tagHtml(m.genres, m.genreTags)} · ${m.addedDate}</div>
+      </div>
+      ${m.new ? '<div class="update-new">NEW</div>' : ''}
+    </div>`).join('');
+
+  // Categories
+  document.getElementById('home-cat-grid').innerHTML = CATEGORIES.map(c => {
+    const cnt = DB.filter(m => m.genres.includes(c.id)).length;
+    return `<div class="cat-card" onclick="openCategory('${c.id}')">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-count">${cnt} เรื่อง · ${c.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── RANKING ───────────────────────────────
+function renderRanking() {
+  const sorted = [...DB].sort((a, b) => b.score - a.score);
+  document.getElementById('rank-list').innerHTML = sorted.map((m, i) => {
+    const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-n';
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`;
+    return `<div class="rank-item" onclick="openDetail(${m.id})">
+      <div class="rank-num ${rankClass}">${medal}</div>
+      <div class="rank-thumb" style="background:${m.coverBg}">${m.emoji}</div>
+      <div class="rank-info">
+        <div class="rank-title">${m.titleEN} <span style="color:var(--muted);font-size:0.8rem;font-weight:400">${m.titleTH}</span></div>
+        <div class="rank-tags">${tagHtml(m.genres, m.genreTags)}</div>
+      </div>
+      <div class="rank-score">⭐ ${m.score}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── CATEGORIES ────────────────────────────
+function renderCategories() {
+  document.getElementById('full-cat-grid').innerHTML = CATEGORIES.map(c => {
+    const cnt = DB.filter(m => m.genres.includes(c.id)).length;
+    return `<div class="cat-card" onclick="openCategory('${c.id}')">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-count">${cnt} เรื่อง · ${c.desc}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('cat-detail').style.display = 'none';
+}
+
+function openCategory(catId) {
+  const cat = CATEGORIES.find(c => c.id === catId);
+  const items = DB.filter(m => m.genres.includes(catId));
+  showPage('category', document.querySelectorAll('.nav-btn')[2]);
+  document.getElementById('cat-detail-header').innerHTML = `
+    <div class="cat-page-icon">${cat.icon}</div>
+    <div>
+      <div class="cat-page-title">มังฮวาแนว${cat.name}</div>
+      <div class="cat-page-count">รวม ${items.length} เรื่อง · ${cat.desc}</div>
+    </div>`;
+  document.getElementById('cat-detail-grid').innerHTML = items.map(cardHtml).join('');
+  document.getElementById('cat-detail').style.display = 'block';
+  document.getElementById('cat-detail').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── SEARCH ────────────────────────────────
+function doSearch() {
+  const q = (document.getElementById('main-search')?.value || '').toLowerCase().trim();
+  let results = DB;
+  if (searchFilter !== 'all') results = results.filter(m => m.genres.includes(searchFilter));
+  if (q) results = results.filter(m =>
+    m.titleEN.toLowerCase().includes(q) ||
+    m.titleTH.toLowerCase().includes(q) ||
+    m.genres.some(g => g.toLowerCase().includes(q))
+  );
+  const el = document.getElementById('search-results');
+  if (results.length === 0) {
+    el.innerHTML = `<div class="no-result" style="grid-column:1/-1"><div class="icon">🔍</div><div>ไม่พบมังฮวาที่ค้นหา</div><div style="font-size:0.82rem;margin-top:8px;color:var(--muted)">ลองค้นด้วยคำอื่น หรือเลือกหมวดหมู่</div></div>`;
+  } else {
+    el.innerHTML = results.map(cardHtml).join('');
+  }
+}
+
+function quickSearch(q) {
+  showPage('search', document.querySelectorAll('.nav-btn')[3]);
+  document.getElementById('main-search').value = q;
+  doSearch();
+}
+
+function setFilter(f, btn) {
+  searchFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  doSearch();
+}
+
+// ─── DETAIL ────────────────────────────────
+function openDetail(id) {
+  const m = DB.find(x => x.id === id);
+  if (!m) return;
+  prevPage = currentPage;
+
+  // Breadcrumb
+  document.getElementById('detail-breadcrumb').innerHTML = `
+    <span onclick="goBack()">← กลับ</span>
+    <span class="sep">/</span>
+    <span class="current">${m.titleEN}</span>`;
+
+  // Hero
+  const statusHtml = m.status === 'done'
+    ? '<span class="status-badge status-done">✅ จบแล้ว</span>'
+    : '<span class="status-badge status-ongoing">🔄 กำลังดำเนินเรื่อง</span>';
+  document.getElementById('detail-hero').innerHTML = `
+    <div class="detail-cover" style="background:${m.coverBg}">
+      <span style="font-size:5rem">${m.emoji}</span>
+    </div>
+    <div class="detail-meta">
+      <h1>${m.titleEN}</h1>
+      <div class="detail-en">${m.titleTH}</div>
+      <div class="detail-score-row">
+        <div class="big-score">⭐ ${m.score}</div>
+        <div><div style="font-size:0.9rem;font-weight:700">คะแนนรีวิว</div><div class="score-label">จาก 10 คะแนน</div></div>
+        ${statusHtml}
+      </div>
+      <div class="detail-tags">${tagHtml(m.genres, m.genreTags)}</div>
+      <div class="detail-stats">
+        <div class="dstat"><div class="dstat-num">${m.chapters}</div><div class="dstat-lbl">ตอน</div></div>
+        <div class="dstat"><div class="dstat-num">${m.views}</div><div class="dstat-lbl">ผู้อ่าน</div></div>
+      </div>
+      <button class="read-btn" onclick="window.open('${m.readLinks[0].url}','_blank')">📖 อ่านเลย</button>
+    </div>`;
+
+  // Body
+  const similarHtml = m.similar.map(sid => {
+    const s = DB.find(x => x.id === sid);
+    return s ? `<div class="m-card" onclick="openDetail(${s.id})" style="max-width:148px">${cardHtml(s).replace('<div class="m-card" onclick="openDetail('+s.id+')">', '')}</div>` : '';
+  }).join('');
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-section">
+      <h2>📝 เรื่องย่อ</h2>
+      <p>${m.synopsis}</p>
+    </div>
+    <div class="detail-section">
+      <h2>💬 รีวิว</h2>
+      <p>${m.review}</p>
+    </div>
+    <div class="detail-section">
+      <h2>📖 เหมาะกับใคร?</h2>
+      <p>${m.suitable}</p>
+    </div>
+    <div class="detail-section">
+      <h2>🔗 อ่านแบบถูกลิขสิทธิ์</h2>
+      <div class="read-links">
+        ${m.readLinks.map(l => `
+          <a href="${l.url}" target="_blank" rel="noopener" class="read-link">
+            <div><div class="read-link-name">${l.name}</div><div class="read-link-note">${l.note}</div></div>
+            <span class="arrow">→</span>
+          </a>`).join('')}
+      </div>
+    </div>
+    <div class="detail-section">
+      <h2>📚 เรื่องคล้ายกันที่น่าอ่าน</h2>
+      <div class="card-grid" style="margin-top:12px">${m.similar.map(sid => { const s = DB.find(x => x.id === sid); return s ? cardHtml(s) : ''; }).join('')}</div>
+    </div>`;
+
+  showPage('detail', null);
+  // Remove active from all nav on detail
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+function goBack() {
+  showPage(prevPage, document.querySelectorAll('.nav-btn')[
+    ['home','ranking','category','search','about'].indexOf(prevPage)
+  ]);
+}
+
+// ─── INIT ──────────────────────────────────
+renderHome();
+renderRanking();
+renderCategories();
+doSearch();
+</script>
+</body>
+</html>
